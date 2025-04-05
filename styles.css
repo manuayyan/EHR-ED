@@ -1,0 +1,145 @@
+/* Custom CSS for Emergency Department Tracking System */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #0d6efd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: white !important;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.nav-link:hover {
+    color: white !important;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+}
+
+.zone-red {
+    border-left: 5px solid #dc3545;
+}
+
+.zone-yellow-a, .zone-yellow-b {
+    border-left: 5px solid #ffc107;
+}
+
+.zone-green {
+    border-left: 5px solid #198754;
+}
+
+.patient-card {
+    transition: transform 0.2s;
+}
+
+.patient-card:hover {
+    transform: translateY(-5px);
+}
+
+.status-badge {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}
+
+.status-waiting {
+    background-color: #6c757d;
+}
+
+.status-in-treatment {
+    background-color: #0d6efd;
+}
+
+.status-awaiting-results {
+    background-color: #6610f2;
+}
+
+.status-ready-for-discharge {
+    background-color: #198754;
+}
+
+.quick-alert {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.vital-sign-normal {
+    color: #198754;
+}
+
+.vital-sign-warning {
+    color: #ffc107;
+}
+
+.vital-sign-danger {
+    color: #dc3545;
+}
+
+.dashboard-stat {
+    text-align: center;
+    padding: 20px;
+}
+
+.dashboard-stat h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.dashboard-stat p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.red-stat h2 {
+    color: #dc3545;
+}
+
+.yellow-stat h2 {
+    color: #ffc107;
+}
+
+.green-stat h2 {
+    color: #198754;
+}
+
+.blue-stat h2 {
+    color: #0d6efd;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.required:after {
+    content: " *";
+    color: #dc3545;
+}
+
+@media (max-width: 768px) {
+    .dashboard-stat h2 {
+        font-size: 2rem;
+    }
+}
