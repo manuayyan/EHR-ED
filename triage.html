@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Department Tracking System - Triage</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+        
+        .sidebar {
+            width: 240px;
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: #bbdefb;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #424242;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .button-primary {
+            background-color: #1976d2;
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background-color: #1565c0;
+        }
+        
+        .button-secondary {
+            background-color: #f5f5f5;
+            color: #616161;
+        }
+        
+        .button-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .button-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .button-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 150px;
+        }
+        
+        .triage-level-selector {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .triage-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .triage-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .triage-option:hover .triage-circle {
+            transform: scale(1.1);
+        }
+        
+        .triage-1 {
+            background-color: #d32f2f;
+        }
+        
+        .triage-2 {
+            background-color: #f57c00;
+        }
+        
+        .triage-3 {
+            background-color: #fbc02d;
+        }
+        
+        .triage-4 {
+            background-color: #388e3c;
+        }
+        
+        .triage-5 {
+            background-color: #1976d2;
+        }
+        
+        .triage-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .zone-selector {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .zone-option {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        
+        .zone-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .zone-red {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .zone-yellow-a {
+            background-color: #fff8e1;
+            color: #f57c00;
+            border: 1px solid #ffe0b2;
+        }
+        
+        .zone-yellow-b {
+            background-color: #fffde7;
+            color: #fbc02d;
+            border: 1px solid #fff9c4;
+        }
+        
+        .zone-green {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #1976d2;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        
+        .quick-alert {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quick-alert-title {
+            color: #d32f2f;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quick-alert-options {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>Emergency Department Tracking System</h1>
+            <div class="user-info">
+                <span>Nurse Sarah Johnson</span>
+                <button class="button button-secondary">Logout</button>
+            </div>
+        </header>
+        
+        <div class="main-container">
+            <aside class="sidebar">
+                <ul class="sidebar-menu">
+                    <li>Dashboard</li>
+                    <li class="active">Triage</li>
+                    <li>Patient Registration</li>
+                    <li>Red Zone</li>
+                    <li>Yellow Zone</li>
+                    <li>Green Zone</li>
+                    <li>Reports</li>
+                    <li>Settings</li>
+                </ul>
+            </aside>
+            
+            <main class="content">
+                <h2 style="margin-bottom: 1.5rem;">Patient Triage</h2>
+                
+                <div class="card">
+                    <h3 class="section-title">Patient Information</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="uhid">UHID</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="uhid" class="form-control" placeholder="Enter UHID">
+                                    <button class="button button-primary">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label>QR Code</label>
+                                <button class="button button-secondary" style="width: 100%;">Scan QR Code</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" class="form-control" placeholder="First Name">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" class="form-control" placeholder="Last Name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" class="form-control" placeholder="Age">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" class="form-control">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number</label>
+                                <input type="tel" id="contactNumber" class="form-control" placeholder="Contact Number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="section-title">Triage Assessment</h3>
+                    
+                    <div class="form-group">
+                        <label for="chiefComplaint">Chief Complaint</label>
+                        <input type="text" id="chiefComplaint" class="form-control" placeholder="Enter chief complaint">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Presenting Symptoms</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom1">
+                                <label for="symptom1">Chest Pain</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom2">
+                                <label for="symptom2">Shortness of Breath</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom3">
+                                <label for="symptom3">Fever</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom4">
+                                <label for="symptom4">Nausea/Vomiting</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom5">
+                                <label for="symptom5">Abdominal Pain</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom6">
+                                <label for="symptom6">Headache</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom7">
+                                <label for="symptom7">Dizziness</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="symptom8">
+                                <label for="symptom8">Trauma</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mobility Status</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="mobility" id="ambulatory">
+                                <label for="ambulatory">Ambulatory</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="mobility" id="wheelchair">
+                                <label for="wheelchair">Wheelchair</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="mobility" id="stretcher">
+                                <label for="stretcher">Stretcher</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Allergies</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="allergies" id="no-allergies">
+                                <label for="no-allergies">None</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="allergies" id="yes-allergies">
+                                <label for="yes-allergies">Yes</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="allergies" id="unknown-allergies">
+                                <label for="unknown-allergies">Unknown</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Triage Level</label>
+                        <div class="triage-level-selector">
+                            <div class="triage-option">
+                                <div class="triage-circle triage-1">1</div>
+                                <div class="triage-label">Resuscitation</div>
+                            </div>
+                            <div class="triage-option">
+                                <div class="triage-circle triage-2">2</div>
+                                <div class="triage-label">Emergency</div>
+                            </div>
+                            <div class="triage-option">
+                                <div class="triage-circle triage-3">3</div>
+                                <div class="triage-label">Urgent</div>
+                            </div>
+                            <div class="triage-option">
+                                <div class="triage-circle triage-4">4</div>
+                                <div class="triage-label">Semi-urgent</div>
+                            </div>
+                            <div class="triage-option">
+                                <div class="triage-circle triage-5">5</div>
+                                <div class="triage-label">Non-urgent</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="section-title">Vital Signs</h3>
+                    
+                    <div class="vitals-grid">
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°C)</label>
+                            <input type="number" id="temperature" class="form-control" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="heartRate">Heart Rate (bpm)</label>
+                            <input type="number" id="heartRate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="respiratoryRate">Respiratory Rate</label>
+                            <input type="number" id="respiratoryRate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="systolicBP">Systolic BP</label>
+                            <input type="number" id="systolicBP" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="diastolicBP">Diastolic BP</label>
+                            <input type="number" id="diastolicBP" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="oxygenSaturation">SpO2 (%)</label>
+                            <input type="number" id="oxygenSaturation" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="painScore">Pain Score (0-10)</label>
+                            <input type="number" id="painScore" class="form-control" min="0" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="consciousness">Consciousness</label>
+                            <select id="consciousness" class="form-control">
+                                <option value="alert">Alert</option>
+                                <option value="verbal">Responds to Verbal</option>
+                                <option value="pain">Responds to Pain</option>
+                                <option value="unresponsive">Unresponsive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quick-alert">
+                    <div class="quick-alert-title">
+                        ⚠️ Quick Alerts
+                    </div>
+                    <div class="quick-alert-options">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="stemi-alert">
+                            <label for="stemi-alert"><strong>STEMI</strong></label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="stroke-alert">
+                            <label for="stroke-alert"><strong>Stroke</strong></label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="trauma-alert">
+                            <label for="trauma-alert"><strong>Trauma</strong></label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="sepsis-alert">
+                            <label for="sepsis-alert"><strong>Sepsis</strong></label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="section-title">Zone Assignment</h3>
+                    
+                    <div class="zone-selector">
+                        <div class="zone-option zone-red">
+                            Red Zone
+                        </div>
+                        <div class="zone-option zone-yellow-a">
+                            Yellow Zone A
+                        </div>
+                        <div class="zone-option zone-yellow-b">
+                            Yellow Zone B
+                        </div>
+                        <div class="zone-option zone-green">
+                            Green Zone
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="triageNotes">Additional Notes</label>
+                    <textarea id="triageNotes" class="form-control" rows="3" placeholder="Enter any additional notes"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="button button-secondary">Reset</button>
+                    <button class="button button-primary">Save & Assign</button>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
